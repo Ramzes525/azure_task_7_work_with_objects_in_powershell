@@ -4,9 +4,9 @@ $resultfile = @()
 
 foreach ($file in $repofile) {
     $jsondata = Get-Content -Path $file.FullName | ConvertFrom-json
-    if ($jsondata | Where-Object {$_.Name -eq $sizevm}) {
-        $region = $file.BaseName
+    if (Select-String -Path $file.FullName -Pattern $sizevm -Quiet) {
+        $region = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
         $resultfile += $region
     }
 }
- $resultfile | ConvertTo-Json | Out-File -Path ./result.json
+ $resultfile | ConvertTo-Json | Out-File -Path ./result.json -Encoding UTF8
